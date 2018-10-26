@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="style/profile.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/js/gijgo.min.js" type="text/javascript"></script>
+    <title>Employee Info</title>
+</head>
+
+<body>
+<div class="container">
+    <!--Header-->
+    <div class="header">
+        <div class="row">
+            <!-- Profile picture-->
+            <div class="col-md-2" style="border:black">
+                <img src="images/defaultProfile.jpg"/>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 col-5">
+                        <label style="font-weight:bold;">Name</label>
+                    </div>
+                    <div id="empName" class="col-md-8 col-6">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 col-5">
+                        <label style="font-weight:bold;">Position</label>
+                    </div>
+                    <div id="empPosition" class="col-md-8 col-6 col-position">
+
+                    </div>
+                </div>
+                <hr class="separator">
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 col-5">
+                        <label style="font-weight:bold;">Manager</label>
+                    </div>
+                    <div id="manager" class="col-md-8 col-6">
+
+                    </div>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#reportModal">Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Tasks -->
+    <div style="display:inline;">
+        <label id="tasksLabel">My Tasks</label>
+        <hr class="separator" style="width: 100%">
+    </div>
+
+    <div class="tasks">
+        <div class="table-container">
+            <table id="tasksTable" class="table table-fixed" style="display: none">
+                <thead class="table-thead">
+                <tr>
+                    <th class="col-xs-8">Text</th>
+                    <th class="col-xs-8">Due Date</th>
+                </tr>
+                </thead>
+                <tbody class="table-tbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Manager Reports-->
+
+    <div class="reports">
+        <div class="table-container">
+
+            <div id="reportsHeadline" style="display:none;">
+                <label id="reportsLabel">My Reports</label>
+                <hr class="separator" style="width: 100%">
+            </div>
+
+
+            <table id="reportsTable" class="table table-fixed" style="display: none">
+                <thead class="table-thead">
+                <tr>
+                    <th class="col-xs-8">Text</th>
+                    <th class="col-xs-8">Report Date</th>
+                </tr>
+                </thead>
+                <tbody class="table-tbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- My Subordinates -->
+
+    <div class="subordinates">
+        <div class="table-container">
+            <div id="subordinatesHeadline" style="display: none">
+                <label id="subordinatesLabel">My Subordinates</label>
+                <hr class="separator" style="width: 100%">
+            </div>
+
+
+            <table id="subordinatesTable" class="table table-fixed" style="display: none">
+                <thead>
+                <tr>
+                    <th class="col-xs-8">Name</th>
+                    <th class="col-xs-8">Position</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">New Report</h5>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 col-6">
+                        <label style="font-weight:bold;">Text</label>
+                    </div>
+                    <div id="reportText" class="col-md-8 col-6">
+                        <input id="reportModalText" type="text" style="position: relative;width: 276px;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onClick="sendReport();">Save</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 col-6">
+                        <label style="font-weight:bold;">Due Date</label>
+                    </div>
+                    <div id="dueDate" class="col-md-8 col-6">
+                        <input id="dueDatepicker" width="276"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 col-6">
+                        <label style="font-weight:bold;">Text</label>
+                    </div>
+                    <div id="taskText" class="col-md-8 col-6">
+                        <input id="taskModalText" type="text" style="position: relative;width: 276px;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onClick="assignTask();">Save</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="scripts/profile.js"></script>
+</body>
+
+</html>
