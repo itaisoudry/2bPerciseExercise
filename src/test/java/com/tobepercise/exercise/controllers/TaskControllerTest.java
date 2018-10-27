@@ -93,6 +93,6 @@ public class TaskControllerTest {
 
         task = this.taskRepo.save(task);
 
-        this.mockMvc.perform(delete("/task/"+task.getId())).andExpect(status().isOk());
+        this.mockMvc.perform(delete("/task/" + task.getId())).andExpect(status().isOk());
     }
 }

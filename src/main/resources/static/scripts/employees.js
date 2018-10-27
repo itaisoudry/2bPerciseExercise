@@ -1,28 +1,31 @@
-var config = {
-    headers: { 'Content-Type': 'application/json' }
-};
+const instance = axios.create({
+    timeout: 1000,
+    headers: {'Content-Type': 'application/json'}
+});
 
 getEmployees();
 
 function getEmployees() {
-    axios.get('/employee', config)
+    instance.get('/employee')
         .then(function (response) {
             populateTable(response.data);
         })
         .catch(function (error) {
+            alert("Error: Cannot get list of employees");
             console.log(error);
         });
 }
 
-function populateTable(data) {
-    var table = document.getElementById('employeesTable').getElementsByTagName("tbody")[0];
-    var body = [];
-    var dictionary = {};
-    for (var employee of data) {
+function populateTable(employees) {
+    const tbody = document.getElementById('employeesTableTbody');
+    const body = [];
+    const dictionary = {};
+
+    employees.forEach(employee => {
 
         dictionary[employee.id] = employee;
 
-        var row = '<tr>';
+        let row = '<tr>';
         row += `<td class="col-xs-2">${employee.id}</td>`;
         row += `<td class="col-xs-8">${employee.firstName}</td>`;
         row += `<td class="col-xs-8">${employee.lastName}</td>`;
@@ -33,14 +36,14 @@ function populateTable(data) {
 
         row += '</tr>';
         body.push(row);
-    }
+    });
 
-    table.innerHTML = body;
+    tbody.innerHTML = body.join('');
     // save employees dictionary in localStorage
     localStorage.employeesData = JSON.stringify(dictionary);
 }
 
 function goToProfile(id) {
-    localStorage.currentEmployeeId=id;
+    localStorage.currentEmployeeId = id;
     document.location.href = "./profile.html";
 }

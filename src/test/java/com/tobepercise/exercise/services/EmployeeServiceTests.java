@@ -43,7 +43,7 @@ public class EmployeeServiceTests {
 
     @Test
     public void deleteEmployeeTest() {
-        Employee empOne = new Employee(232124543,"First","Employee",0,PositionEnum.MANAGER);
+        Employee empOne = new Employee(232124543, "First", "Employee", 0, PositionEnum.MANAGER);
         this.empRepo.save(empOne);
 
         this.empService.delete(empOne.getId());
@@ -68,8 +68,8 @@ public class EmployeeServiceTests {
     public void getEmployeesSummaryShouldReturnSevenEmployeesSummary() {
         this.empRepo.deleteAll();
 
-        Employee empOne = new Employee(123456789,"First","Employee",0,PositionEnum.MANAGER);
-        Employee empTwo = new Employee(123456788,"Second","Employee",0,PositionEnum.EMPLOYEE);
+        Employee empOne = new Employee(123456789, "First", "Employee", 0, PositionEnum.MANAGER);
+        Employee empTwo = new Employee(123456788, "Second", "Employee", 0, PositionEnum.EMPLOYEE);
 
         this.empService.create(empOne);
         this.empService.create(empTwo);

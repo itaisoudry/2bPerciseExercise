@@ -27,9 +27,9 @@ public class ReportServiceTest {
     private EmployeeRepository empRepo;
 
     @Before
-    public void before(){
-        Employee manager = new Employee(111111111,"Manager","Employee",0, PositionEnum.MANAGER);
-        Employee employee = new Employee(111111112,"Employee","Employee",111111111,PositionEnum.EMPLOYEE);
+    public void before() {
+        Employee manager = new Employee(111111111, "Manager", "Employee", 0, PositionEnum.MANAGER);
+        Employee employee = new Employee(111111112, "Employee", "Employee", 111111111, PositionEnum.EMPLOYEE);
 
         this.empRepo.save(manager);
         this.empRepo.save(employee);

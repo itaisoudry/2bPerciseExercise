@@ -24,7 +24,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable("employeeId") int employeeId) throws EmployeeControllerException {
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable int employeeId) throws
+            EmployeeControllerException {
         if (employeeId <= 0)
             throw new EmployeeControllerException("Incorrect employeeId: Id should be bigger than 0");
 
@@ -37,7 +38,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee/{managerId}/subordinates")
-    public ResponseEntity<List<Employee>> getManagerSubOrdinates(@PathVariable int managerId) throws EmployeeControllerException {
+    public ResponseEntity<List<Employee>> getManagerSubOrdinates(@PathVariable int managerId) throws
+            EmployeeControllerException {
         if (managerId <= 0)
             throw new EmployeeControllerException("Incorrect employeeId: Id should be bigger than 0");
 

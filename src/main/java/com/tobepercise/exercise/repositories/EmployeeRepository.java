@@ -15,7 +15,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Employee getEmployeeById(int employeeId);
 
-    @Query(value = "SELECT count(id) FROM employees WHERE (id=:employeeId) OR (id=:managerId AND position=1)", nativeQuery = true)
+    @Query(value = "SELECT count(id) FROM employees WHERE (id=:employeeId) OR (id=:managerId AND position=1)",
+            nativeQuery = true)
     int isEmployeeAndManagerExists(@Param("employeeId") int employeeId, @Param("managerId") int managerId);
 
     List<Employee> getEmployeeByManagerId(int managerId);

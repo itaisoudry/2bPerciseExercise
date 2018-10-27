@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"com.tobepercise.exercise.model"} )
+@EntityScan(basePackages = {"com.tobepercise.exercise.model"})
 @EnableJpaRepositories(basePackages = {"com.tobepercise.exercise.repositories"})
 public class ExerciseApplication {
 

@@ -1,13 +1,16 @@
-const config = {
+const instance = axios.create({
+    timeout: 1000,
     headers: {'Content-Type': 'application/json'}
-};
+});
+
+const MANAGER = 'MANAGER';
 
 const employeeId = localStorage.currentEmployeeId;
 const employeesData = JSON.parse(localStorage.employeesData);
-let employee = employeesData[employeeId];
-let manager = employeesData[employee.managerId];
+const employee = employeesData[employeeId];
+const manager = employeesData[employee.managerId];
 
-if (employee.position === 'MANAGER') {
+if (employee.position === MANAGER) {
     displayManagerReportsAndSubOrdLabels();
     getManagerSubordinates();
     getManagerReports();
@@ -17,31 +20,30 @@ getEmployeeTasks();
 populateEmployeeData();
 
 function getManagerReports() {
-    axios.get(`/report/${employee.id}`, config).then((response) => {
+    instance.get(`/report/${employee.id}`).then((response) => {
         populateReports(response.data);
     }).catch((error) => {
+        alert('Error: Cannot get manager reports');
         console.log(error);
     });
 }
 
 function getEmployeeTasks() {
-    axios.get(`/task/${employee.id}`, config).then((response) => {
+    instance.get(`/task/${employee.id}`).then((response) => {
         populateTasks(response.data);
     }).catch((error) => {
+        alert("Error: Cannot get employee tasks");
         console.log(error);
     });
 }
 
 function getManagerSubordinates() {
-    if (employee.position === 'MANAGER') {
-        axios.get(`/employee/${employee.id}/subordinates`, config).then((response) => {
-            populateSubordinates(response.data);
-        }).catch((error) => {
-            console.log(error);
-        })
-    } else {
-        console.error('Employee is not a manager.');
-    }
+    instance.get(`/employee/${employee.id}/subordinates`).then((response) => {
+        populateSubordinates(response.data);
+    }).catch((error) => {
+        alert("Error: Cannot get manager subordinates");
+        console.log(error);
+    });
 }
 
 
@@ -55,12 +57,11 @@ function populateTasks(tasks) {
 }
 
 function populateTasksTable(tasks) {
-    let table = document.getElementById('tasksTable');
-    let tbody = table.getElementsByTagName("tbody")[0];
+    const tbody = document.getElementById('tasksTableTbody');
 
-    let body = [];
-    for (let task of tasks) {
-        let dueDate = moment(task.dueDate).format("DD-MM-YYYY HH:MM");
+    const body = [];
+    tasks.forEach(task => {
+        const dueDate = moment(task.dueDate).format("DD-MM-YYYY HH:MM");
 
         let row = '<tr>';
         row += `<td class="col-xs-8">${task.text}</td>`;
@@ -68,9 +69,9 @@ function populateTasksTable(tasks) {
 
         row += '</tr>';
         body.push(row);
-    }
+    });
 
-    tbody.innerHTML = body;
+    tbody.innerHTML = body.join('');
 }
 
 function populateReports(reports) {
@@ -84,12 +85,11 @@ function populateReports(reports) {
 }
 
 function populateReportsTable(reports) {
-    let table = document.getElementById('reportsTable');
-    let tbody = table.getElementsByTagName("tbody")[0];
+    const tbody = document.getElementById('reportsTableTbody');
 
-    let body = [];
-    for (let report of reports) {
-        let reportDate = moment(report.reportDate).format("DD-MM-YYYY HH:MM");
+    const body = [];
+    reports.forEach(report => {
+        const reportDate = moment(report.reportDate).format("DD-MM-YYYY HH:MM");
 
         let row = '<tr>';
         row += `<td class="col-xs-8">${report.text}</td>`;
@@ -97,9 +97,9 @@ function populateReportsTable(reports) {
 
         row += '</tr>';
         body.push(row);
-    }
+    });
 
-    tbody.innerHTML = body;
+    tbody.innerHTML = body.join('');
 }
 
 
@@ -116,10 +116,10 @@ function populateSubordinates(subordinates) {
 }
 
 function populateSubordinatesTable(subordinates) {
-    let table = document.getElementById('subordinatesTable').getElementsByTagName("tbody")[0];
-    let body = [];
-    for (let subordinate of subordinates) {
-        let name = subordinate.firstName + ' ' + subordinate.lastName;
+    const tbody = document.getElementById('subordinatesTableTbody');
+    const body = [];
+    subordinates.forEach(subordinate => {
+        const name = subordinate.firstName + ' ' + subordinate.lastName;
 
         let row = '<tr>';
         row += `<td class="col-xs-8">${name}</td>`;
@@ -130,13 +130,13 @@ function populateSubordinatesTable(subordinates) {
 
         row += '</tr>';
         body.push(row);
-    }
+    });
 
-    table.innerHTML = body;
+    tbody.innerHTML = body.join('');
 }
 
 function populateEmployeeData() {
-    let empName = employee.firstName + ' ' + employee.lastName;
+    const empName = employee.firstName + ' ' + employee.lastName;
     let managerName = 'No Manager';
 
     // if manager==null, there is no manager.
@@ -150,27 +150,28 @@ function populateEmployeeData() {
 }
 
 function assignTask() {
-    let dueDate = document.getElementById("dueDatepicker").value;
-    let text = document.getElementById("taskModalText").value;
+    const dueDate = document.getElementById("dueDatepicker").value;
+    const text = document.getElementById("taskModalText").value;
 
-    let formattedDueDate = moment(dueDate).format("YYYY-MM-DD HH:MM:SS.SSS");
-    let formattedAssignDate = moment().format("YYYY-MM-DD HH:MM:SS.SSS");
+    const formattedDueDate = moment(dueDate).format("YYYY-MM-DD HH:MM:SS.SSS");
+    const formattedAssignDate = moment().format("YYYY-MM-DD HH:MM:SS.SSS");
 
     if (text.length === 0 || formattedDueDate == null) {
         alert('Text must not be empty and date in format "20:10 10/04/2018" ');
         return;
     }
 
-    let task = {
+    const task = {
         text: text,
         assignDate: formattedAssignDate,
         dueDate: formattedDueDate,
         employeeId: localStorage.clickedSubordinateId
     };
 
-    axios.post("/task", task).then((res) => {
+    instance.post("/task", task).then((res) => {
         console.log(res);
     }).catch(error => {
+        alert("Error: Cannot create task");
         console.log(error);
     });
     $('#taskModal').modal('hide');
@@ -184,21 +185,23 @@ $('#dueDatepicker').datetimepicker({
 
 
 function sendReport() {
-    let text = document.getElementById("reportModalText").value;
-    let reportDate = moment().format("YYYY-MM-DD HH:MM:SS.SSS");
+    const text = document.getElementById("reportModalText").value;
+    const reportDate = moment().format("YYYY-MM-DD HH:MM:SS.SSS");
 
     if (text.length === 0) {
         alert('Text must not be empty.');
         return;
     }
 
-    let report = {text: text, reportDate: reportDate, employeeId: employeeId, managerId: manager.id};
-    console.log(report);
-    axios.post("/report", report).then((res) => {
+    const report = {text: text, reportDate: reportDate, employeeId: employeeId, managerId: manager.id};
+
+    instance.post("/report", report).then((res) => {
         console.log(res);
     }).catch(error => {
+        alert("Error: Cannot create report");
         console.log(error);
     });
+
     $('#reportModal').modal('hide');
     document.getElementById("reportModalText").value = '';
 }

@@ -19,18 +19,18 @@ public class Report {
     @Setter(AccessLevel.NONE)
     private int id;
 
-    @NotNull(message="Report text must not be null")
-    @Size(min = 1, max = 300,message="Report text length can be between 1 and 300")
+    @NotNull(message = "Report text must not be null")
+    @Size(min = 1, max = 300, message = "Report text length can be between 1 and 300")
     private String text;
 
-    @NotNull(message="Report date must not be null")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    @NotNull(message = "Report date must not be null")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private Timestamp reportDate;
 
-    @NotNull(message="Report employeeId must not be null")
+    @NotNull(message = "Report employeeId must not be null")
     private int employeeId;
 
-    @NotNull(message="Report managerId must not be null")
+    @NotNull(message = "Report managerId must not be null")
     private int managerId;
 
     public Report(String text, Timestamp reportDate, int employeeId, int managerId) {
@@ -40,7 +40,7 @@ public class Report {
         this.managerId = managerId;
     }
 
-    public Report(){
+    public Report() {
 
     }
 

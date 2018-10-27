@@ -52,7 +52,7 @@ public class TaskRepositoryTest {
 
         Task found = this.taskRepo.getTasksById(task.getId());
 
-        Assert.notNull(found,"Result should not be null");
-        Assert.isTrue(found.equals(task),"Result and input should be equal");
+        Assert.notNull(found, "Result should not be null");
+        Assert.isTrue(found.equals(task), "Result and input should be equal");
     }
 }
