@@ -4,6 +4,7 @@
   - ##### Server
     - Spring boot
     - Hibernate (H2 In-Memory database) - SQL Server (data is loaded from data.sql file in the resources folder)
+    - JUnit - Testing
  - ##### Client
     - HTML
     - CSS
